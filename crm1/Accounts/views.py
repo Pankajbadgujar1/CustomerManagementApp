@@ -3,7 +3,13 @@ from django.http import HttpResponse
 
 # Create your views here.
 def home(request):
-    return HttpResponse("Hello, Account App page Django!")
+    return render(request, 'Accounts/dashboard.html')
+    #return HttpResponse("Hello, Account App page Django!")
 
-def contact(request):
-    return HttpResponse(" Account app Contact Page")
+def customer(request):
+    return render(request, 'Accounts/customer.html')
+    #return HttpResponse(" Account app Contact Page")
+
+
+def products(request):
+    return render(request, 'Accounts/products.html')
