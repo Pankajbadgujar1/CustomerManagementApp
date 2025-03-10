@@ -20,8 +20,8 @@
         <div class="card card-body">
           <h5>Contact Information :</h5>
             <hr>
-            <p>Email :{{customers.email}}</p>
-            <p>Phone :{{customers.phone}}</p>
+            <p>Email :{{customer.email}}</p>
+            <p>Phone :{{customer.phone}}</p>
              </div>
     </div>
 
@@ -65,7 +65,7 @@
                         <td>{{order.product.category }}</td>
                         <td>{{order.product.date_created}}</td>
                         <td>{{order.status}}</td>
-                        <td><a class="btn btn-sm btn-success" href="">Update</a></td>
+                        <td><a class="btn btn-sm btn-success" href="#">Update</a></td>
                         <td><a  class="btn btn-sm btn-danger" href="#">Remove</a></td>
                     </tr>
                     {% endfor %}
