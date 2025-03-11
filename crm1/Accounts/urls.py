@@ -29,4 +29,8 @@ urlpatterns = [
     path('update_order/<str:pkk>', views.update_Order, name='update_order'),
     path('delete_order/<str:pkk>', views.delete_Order, name='delete_order'),
 
+    path('register/' , views.registerPage, name='register'),
+    path('login/' , views.loginPage, name='login'),
+    path('logout/', views.logoutUser, name='logout'),
+
 ]
