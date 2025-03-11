@@ -10,8 +10,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
 from django.contrib.auth import authenticate,login , logout
-
+#django built-in decorator
 from django.contrib.auth.decorators import login_required
+#djnago custome decoratior
+from .decorators import unauthenticated_user, allowed_users
 #creating login and register 
 def registerPage(request):
     if request.user.is_authenticated:
@@ -56,6 +58,7 @@ def logoutUser(request):
 # Create your views here.
 #This is create order view
 login_required(login_url='login')
+
 def create_Order(request, pkk):
     OrderFormSet = inlineformset_factory(Customer, Order, fields= ('product','status'), extra=10)
     customer = Customer.objects.get(id=pkk)
@@ -97,7 +100,8 @@ def delete_Order(request, pkk):
     context= {'item':order}
     return render(request,'Accounts/delete.html' ,context )
 
-login_required(login_url='login')
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def home(request):
     orders = Order.objects.all()
     customers = Customer.objects.all()
