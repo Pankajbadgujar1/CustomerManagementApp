@@ -3,6 +3,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import *
 from .forms import OrderForm
+from .filters import OrderFilter
 # Create your views here.
 #This is create order view
 def create_Order(request, pkk):
@@ -62,7 +63,10 @@ def customer(request, pk):
     customer = Customer.objects.get(id=pk)
     orders = customer.order_set.all()
 
-    context = {'customer':customer, 'orders':orders}
+    MyFilter = OrderFilter(request.GET, queryset=orders)
+    orders = MyFilter.qs
+
+    context = {'customer':customer, 'orders':orders, 'MyFilter':MyFilter}
     return render(request, 'Accounts/customer.html',context)
     #return HttpResponse(" Account app Contact Page")
 
