@@ -31,19 +31,17 @@ def registerPage(request):
     return render(request,'Accounts/register.html',context)
 
 def loginPage(request):
-    if request.user.is_authenticated:
-        return redirect('login')
-    else:
-        if request.method == "POST":
-            username = request.POST.get('username')
-            password =request.POST.get('password')
-            user = authenticate(request,username=username ,password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('home')
-            else:
-                messages.info(request,"Username or password is incorrect")
-                return render(request,'Accounts/login.html')
+    
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password =request.POST.get('password')
+        user = authenticate(request,username=username ,password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.info(request,"Username or password is incorrect")
+            return render(request,'Accounts/login.html')
 
   
     context = {}
@@ -55,7 +53,7 @@ def logoutUser(request):
 
 # Create your views here.
 #This is create order view
-login_required(login_url='login')
+@login_required(login_url='login')
 def create_Order(request, pkk):
     OrderFormSet = inlineformset_factory(Customer, Order, fields= ('product','status'), extra=10)
     customer = Customer.objects.get(id=pkk)
@@ -72,7 +70,7 @@ def create_Order(request, pkk):
     return render(request,'Accounts/order_form.html' ,context )
 
 #update order view
-login_required(login_url='login')
+@login_required(login_url='login')
 def update_Order(request,pkk):
     order = Order.objects.get(id =pkk)
     form = OrderForm(instance=order) 
@@ -86,7 +84,7 @@ def update_Order(request,pkk):
     context = {'form':form}
     return render(request,'Accounts/order_form.html' ,context )
 
-login_required(login_url='login')
+@login_required(login_url='login')
 def delete_Order(request, pkk):
     order = Order.objects.get(id=pkk)
 
@@ -97,20 +95,23 @@ def delete_Order(request, pkk):
     context= {'item':order}
     return render(request,'Accounts/delete.html' ,context )
 
-login_required(login_url='login')
+@login_required(login_url='login')
 def home(request):
-    orders = Order.objects.all()
-    customers = Customer.objects.all()
+    if request.user.is_authenticated:
+        return redirect('login')
+    else:
+        orders = Order.objects.all()
+        customers = Customer.objects.all()
 
-    total_customers = customers.count()
-    total_orders = orders.count()
-    delivered = orders.filter(status ='Delivered').count()
-    pending = orders.filter(status ='Pending').count()
-    context = {'orders':orders, 'customers':customers, 'total_orders':total_orders, 'total_customers':total_customers,'delivered':delivered,'pending':pending}
-    return render(request, 'Accounts/dashboard.html' ,context)
+        total_customers = customers.count()
+        total_orders = orders.count()
+        delivered = orders.filter(status ='Delivered').count()
+        pending = orders.filter(status ='Pending').count()
+        context = {'orders':orders, 'customers':customers, 'total_orders':total_orders, 'total_customers':total_customers,'delivered':delivered,'pending':pending}
+        return render(request, 'Accounts/dashboard.html' ,context)
     #return HttpResponse("Hello, Account App page Django!")
 
-login_required(login_url='login')
+@login_required(login_url='login')
 def customer(request, pk):
     customer = Customer.objects.get(id=pk)
     orders = customer.order_set.all()
@@ -122,7 +123,7 @@ def customer(request, pk):
     return render(request, 'Accounts/customer.html',context)
     #return HttpResponse(" Account app Contact Page")
 
-login_required(login_url='login')
+@login_required(login_url='login')
 def products(request):
     product = Product.objects.all()
     return render(request, 'Accounts/products.html', {'product':product})
