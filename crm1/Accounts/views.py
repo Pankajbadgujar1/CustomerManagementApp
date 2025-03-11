@@ -1,18 +1,23 @@
+from django.forms import inlineformset_factory
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import *
 from .forms import OrderForm
 # Create your views here.
 #This is create order view
-def create_Order(request):
-    form = OrderForm()
+def create_Order(request, pkk):
+    OrderFormSet = inlineformset_factory(Customer, Order, fields= ('product','status'), extra=10)
+    customer = Customer.objects.get(id=pkk)
+    formset = OrderFormSet( queryset= Order.objects.none(),instance=customer)
+    #form = OrderForm(initial={'customer':customer})
     if request.method =="POST":
         #print('printiong post',request.POST)
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            form.save()
+        #form = OrderForm(request.POST)
+        formset = OrderFormSet(request.POST, instance=customer)
+        if formset.is_valid():
+            formset.save()
             return redirect('/')
-    context = {'form':form}
+    context = {'formset':formset}
     return render(request,'Accounts/order_form.html' ,context )
 
 #update order view
