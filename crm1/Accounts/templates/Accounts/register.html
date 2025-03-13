@@ -81,6 +81,13 @@
 			outline: 0px !important;
 		}
 
+		#messages{
+			background-color: grey;
+			color: #fff;
+			padding: 10px;
+			margin-top: 10px;
+		}
+
 	</style>
 
 </head>
@@ -125,7 +132,7 @@
 				   		</div>
 					</form>
 				</div>
-                {%for message in messages%}
+                {%for message in messages %}
                 <p id = "messages">{{message}} </p>
                 {%endfor%}
 				<div class="mt-4">
