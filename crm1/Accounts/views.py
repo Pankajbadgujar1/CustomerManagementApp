@@ -2,7 +2,7 @@ from django.forms import inlineformset_factory
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import *
-from .forms import OrderForm ,CreateUserForm
+from .forms import OrderForm ,CreateUserForm,CustomerForm
 from .filters import OrderFilter
 from django.contrib.auth.models import Group
 
@@ -44,6 +44,24 @@ def registerPage(request):
     context = {'form':form}
     return render(request,'Accounts/register.html',context)
 
+
+#-------------------------------------------------------------------------------------------------------
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Customer'])
+def accountSetting(request):
+    customer =request.user.customer
+    form = CustomerForm(instance=customer)
+
+    if request.method  =='POST':
+        form = CustomerForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            form.save()
+
+    context = {'form':form}
+    return render(request,'Accounts/account.html',context)
+
+#-------------------------------------------------------------------------------------------------------
+
 def loginPage(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -59,6 +77,7 @@ def loginPage(request):
   
     context = {}
     return render(request,'Accounts/login.html',context)
+
 
 def logoutUser(request):
     logout(request)
