@@ -18,7 +18,6 @@ from .decorators import unauthenticated_user, allowed_users
 #creating login and register 
 def registerPage(request):
     form = CreateUserForm()
-
     if request.method =="POST":
         form =CreateUserForm(request.POST)
         if form.is_valid():
